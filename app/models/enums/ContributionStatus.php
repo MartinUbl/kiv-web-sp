@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Enumerator of contribution statuses
+ */
 class ContributionStatus
 {
     const NEW_CONTRIB = 'new';
@@ -7,6 +10,10 @@ class ContributionStatus
     const REJECTED = 'rejected';
     const ACCEPTED = 'accepted';
 
+    /**
+     * Retrieves translation array
+     * @return array
+     */
     public static function getStatusTranslations()
     {
         return array(

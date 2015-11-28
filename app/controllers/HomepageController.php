@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Description of HomepageController
- *
- * @author Kennny
+ * Homepage controller
  */
 class HomepageController extends BaseController
 {

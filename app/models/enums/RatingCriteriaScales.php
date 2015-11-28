@@ -1,7 +1,14 @@
 <?php
 
+/**
+ * Class of all rating criteria scales
+ */
 class RatingCriteriaScales
 {
+    /**
+     * Retrieves originality rating scale
+     * @return array
+     */
     public static function getOriginalityScale()
     {
         return array(
@@ -13,6 +20,10 @@ class RatingCriteriaScales
         );
     }
 
+    /**
+     * Retrieves topic rating scale
+     * @return array
+     */
     public static function getTopicScale()
     {
         return array(
@@ -24,6 +35,10 @@ class RatingCriteriaScales
         );
     }
 
+    /**
+     * Retrieves structure rating scale
+     * @return array
+     */
     public static function getStructureScale()
     {
         return array(
@@ -35,6 +50,10 @@ class RatingCriteriaScales
         );
     }
 
+    /**
+     * Retrieves language rating scale
+     * @return array
+     */
     public static function getLanguageScale()
     {
         return array(
@@ -46,6 +65,10 @@ class RatingCriteriaScales
         );
     }
 
+    /**
+     * Retrieves recommendation rating scale
+     * @return array
+     */
     public static function getRecommendationScale()
     {
         return array(
@@ -57,6 +80,10 @@ class RatingCriteriaScales
         );
     }
 
+    /**
+     * Retrieves all rating scales
+     * @return array
+     */
     public static function getAllScales()
     {
         return array(
