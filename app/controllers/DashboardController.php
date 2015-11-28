@@ -413,6 +413,13 @@ class DashboardController extends BaseSecuredController
         $this->args->contribs = $this->contributions()->getAllContributions();
         $this->args->contribCount = $this->args->contribs->rowCount();
 
+        $ratCountArray = array();
+        $ratres = $this->contributions()->getSubmittedRatingsCount();
+        foreach ($ratres as $rr)
+            $ratCountArray[$rr['contributions_id']] = $rr['count'];
+
+        $this->args->ratingCounts = $ratCountArray;
+
         $this->args->statusTranslations = ContributionStatus::getStatusTranslations();
     }
 

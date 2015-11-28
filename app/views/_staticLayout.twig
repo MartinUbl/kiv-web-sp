@@ -3,6 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="description" content="WEBKONF - konference">
+    <meta name="keywords" content="webkonf,konference,kiv,fav,zcu,web">
+    <meta http-equiv="Content-language" content="cs">
+    <meta name="robots" content="index,follow">
+    <meta name="author" content="ublm">
     <title>{{ page_title }}</title>
 
     <link href="{{ base_url }}/css/foundation.min.css" rel="stylesheet" />
@@ -31,18 +36,27 @@
             {% endif %}
         </div>
 
-        <div id="navmenu">
-            <a class="item" href="{{ link('/') }}" title="Domovská stránka">Titulní stránka</a>
-            {% if user is defined %}
-                <a class="item" href="{{ link('/dashboard/') }}{{ user['role'] }}" title="Jít na nástěnku" >Nástěnka</a>
-            {% else %}
-                <a class="item" href="{{ link('/sign/in') }}" title="Přihlásit se">Přihlásit se</a>
-            {% endif %}
-        </div>
+        <div class="content nopad">
+            <div id="leftmenu">
+                <a title="Titulní strana" href="{{ link('/') }}" class="item">Titulní strana</a>
+                <a title="O konferenci" href="{{ link('/homepage/aboutconf') }}" class="item">O konferenci</a>
+                <a title="Témata" href="{{ link('/homepage/topics') }}" class="item">Témata</a>
+                <a title="Termíny" href="{{ link('/homepage/dates') }}" class="item">Termíny</a>
+                <a title="Organizátoři" href="{{ link('/homepage/team') }}" class="item">Organizátoři</a>
+                <a title="Čas a místo konání" href="{{ link('/homepage/place') }}" class="item">Čas a místo konání</a>
+                <a title="Sponzoři" href="{{ link('/homepage/sponsors') }}" class="item">Sponzoři</a>
+                <a title="Pokyny pro autory" href="{{ link('/homepage/authorinfo') }}" class="item">Pokyny pro autory</a>
+                {% if user is defined %}
+                    <a title="Uživatelský panel" class="item" href="{{ link('/dashboard/') }}{{ user['role'] }}">Uživatelský panel</a>
+                {% else %}
+                    <a title="Přihlásit se" class="item" href="{{ link('/sign/in') }}">Přihlásit se</a>
+                {% endif %}
+            </div>
 
-        <div class="content">
-        {% block content %}
-        {% endblock %}
+            <div id="staticcontent">
+            {% block content %}
+            {% endblock %}
+            </div>
         </div>
 
         <div id="footer">

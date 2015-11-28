@@ -30,6 +30,7 @@
                         <span title="Hodnocení bude k dispozici po odeslání ke schválení">není k dispozici</span>
                     {% else %}
                         <a href="javascript:void(0)" title="Zobrazit hodnocení" onclick="openRatingDialog({{ contrib['id'] }}, '{{ contrib['name'] }}')">Zobrazit</a>
+                        ({% if contrib['id'] in ratingCounts|keys %}{{ratingCounts[contrib['id']]}}{% else %}0{% endif %}x hodnoceno)
                     {% endif %}
                 </td>
                 <td>

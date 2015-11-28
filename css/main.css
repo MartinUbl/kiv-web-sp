@@ -12,6 +12,7 @@ body, html
 body
 {
     font-size: 10pt;
+    background: url(../img/bgrepeat.jpg);
 }
 
 h1
@@ -35,17 +36,63 @@ a.nodecor
     max-width: 1024px;
     margin: auto;
 
-    background-color:lightcyan;
+    background-color: #EBF6FB;
 
     position: relative;
     padding-bottom: 3.5em;
+
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
 }
 
 .content
 {
     width: 100%;
     height: auto;
-    padding: 1em 2em 1em 2em;
+    padding: 2em 2em 1em 2em;
+    overflow: auto;
+}
+
+.content.nopad
+{
+    padding: 0 !important;
+}
+
+#leftmenu
+{
+    width: 200px;
+    height: 100%;
+    float: left;
+}
+#leftmenu .item
+{
+    display: block;
+    width: 100%;
+    height: 2.4em;
+    line-height: 2.4em;
+    text-align: center;
+
+    border-bottom: 1px solid navy;
+    border-right: 1px solid navy;
+
+    background-color: #2ba6cb;
+
+    transition: background-color 0.2s;
+    -webkit-transition: background-color 0.2s;
+}
+#leftmenu .item:hover
+{
+    background-color: #1b869b;
+}
+#leftmenu a, #leftmenu a:visited, #leftmenu a:active
+{
+    color: black;
+}
+
+#staticcontent
+{
+    width: 100%;
+    padding: 2em 1em 2em 225px;
 }
 
 #header
@@ -54,13 +101,15 @@ a.nodecor
     padding: 1em 1em 0 1.5em;
     height: 9em;
     position: relative;
+    border-bottom: 1px solid navy;
 }
 #navmenu
 {
     width: 100%;
     height: 2em;
     background-color: #2ba6cb;
-    margin-bottom: 1em;
+
+    border-bottom: 1px solid navy;
 
     display: flex;
     justify-content: center;
@@ -71,7 +120,25 @@ a.nodecor
     line-height: 2em;
     height: 2em;
     background-color: #116ca8;
-    margin-right: 1px;
+    border-right: 1px solid navy;
+    border-bottom: 1px solid navy;
+
+    transition: background-color 0.2s, color 0.2s;
+    -webkit-transition: background-color 0.2s, color 0.2s;
+}
+#navmenu .item.bleft
+{
+    border-left: 1px solid navy;
+}
+#navmenu a, #navmenu a:active, #navmenu a:visited, #navmenu a:focus
+{
+    color: #7BCFCF;
+}
+
+#navmenu a:hover
+{
+    color: white;
+    background-color: #2b569b;
 }
 
 .userpanel
@@ -95,6 +162,8 @@ a.nodecor
 
     height: 2.5em;
     padding-top: 0.5em;
+
+    border-top: 1px solid navy;
 
     color: black;
 }
@@ -190,4 +259,24 @@ input[type=submit]
 {
     text-align: center;
     width: 20%;
+}
+
+#mapdiv
+{
+    width: 300px;
+    height: 280px;
+    margin: auto;
+}
+
+.sponsorblock
+{
+    width: 100%;
+}
+
+.sponsorblock img
+{
+    display: block;
+    width: 200px;
+    height: auto;
+    margin: 2em auto 1em auto;
 }

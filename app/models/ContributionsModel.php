@@ -19,6 +19,15 @@ class ContributionsModel extends BaseModel
     }
 
     /**
+     * Retrieves selection of all approved contributions
+     * @return PDOStatement
+     */
+    public function getApprovedContributions()
+    {
+        return $this->query("SELECT *, cb.id AS id, us.username AS username, us.first_name AS first_name, us.last_name AS last_name FROM contributions cb LEFT JOIN users us ON cb.users_id = us.id WHERE status = '".ContributionStatus::ACCEPTED."'");
+    }
+
+    /**
      * Retrieves all user contributions
      * @param int $userId
      * @param int $offset
@@ -192,5 +201,14 @@ class ContributionsModel extends BaseModel
     public function getAssignedContributions($userid)
     {
         return $this->query("SELECT * FROM contributions WHERE status = '".ContributionStatus::SUBMITTED."' AND id IN (SELECT contributions_id FROM contribution_rating_assignment WHERE users_id = ".$userid.")");
+    }
+
+    /**
+     * Retrieves all submitted contributions rating count
+     * @return PDOStatement
+     */
+    public function getSubmittedRatingsCount()
+    {
+        return $this->query("SELECT contributions_id, COUNT(1) AS count FROM contribution_rating GROUP BY contributions_id");
     }
 }

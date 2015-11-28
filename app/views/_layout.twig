@@ -36,6 +36,7 @@
         </div>
 
         <div id="navmenu">
+            <a class="item bleft" href="{{ link('/') }}" title="Domovská stránka">Titulní stránka</a>
             {% if user is defined %}
                 <a class="item" href="{{ link('/dashboard/') }}{{ user['role'] }}" title="Jít na nástěnku" >Nástěnka</a>
                 {% if user['role'] == 'author' %}

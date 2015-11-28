@@ -1,0 +1,27 @@
+{% extends "_staticLayout.twig" %}
+
+{% block subtitle %}
+    <h2>Semestrální práce KIV/WEB</h2>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Témata</h3>
+
+    <p>Témata můžete přihlašovat od 1. 9. 2015 pomocí tohoto webového portálu - stačí se registrovat a vložit potřebný příspěvek vč. abstraktu.</p>
+
+    <p>Zatím byla schválena tato témata:</p>
+
+    {% for contrib in contributions %}
+        <h5>{{ contrib['name'] }}</h5>
+        <h6>{{ contrib['authors'] }}</h6>
+        <p>
+            {{ contrib['abstract'] }}
+            <a target="_blank" href="{{ link('/uploads/') }}{{ contrib['filename'] }}" class="button tiny float-right">Stáhnout příspěvek</a>
+        </p>
+        <hr/>
+    {% else %}
+        - žádná témata zatím nebyla administrátorem schválena -
+    {% endfor %}
+
+{% endblock %}

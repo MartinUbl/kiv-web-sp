@@ -1,0 +1,38 @@
+{% extends "_staticLayout.twig" %}
+
+{% block subtitle %}
+    <h2>Semestrální práce KIV/WEB</h2>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Čas a místo konání</h3>
+
+    <h5>Čas</h5>
+
+    <p>Datum konání byl stanoven na 2.2.2016. Předpokládaný start akce je v 8:30. O případných změnách budete včas informováni.</p>
+
+    <h5>Místo</h5>
+
+    <p>Akce WEBKONF 2016 se bude konat nově v posluchárně UC-224 v nové budově Fakulty aplikovaných věd Západočeské univerzity v Plzni. </p>
+
+    <div id="mapdiv"></div>
+
+    <script type="text/javascript">
+        function initMap()
+        {
+            var map = new google.maps.Map(document.getElementById('mapdiv'), {
+                center: { lat: 49.7267443, lng: 13.3519938 },
+                zoom: 18
+            });
+
+            var marker = new google.maps.Marker({
+                position: { lat: 49.7267443, lng: 13.3519938 },
+                map: map,
+                title: 'UC-224'
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+
+{% endblock %}

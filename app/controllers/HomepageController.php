@@ -5,8 +5,8 @@
  */
 class HomepageController extends BaseController
 {
-    public function actionHomepage()
+    public function actionTopics()
     {
-        //
+        $this->args->contributions = $this->contributions()->getApprovedContributions();
     }
 }

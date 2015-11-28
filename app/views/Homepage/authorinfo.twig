@@ -1,0 +1,29 @@
+{% extends "_staticLayout.twig" %}
+
+{% block subtitle %}
+    <h2>Semestrální práce KIV/WEB</h2>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Pokyny pro autory</h3>
+
+    <h5>Jazyk příspěvků</h5>
+
+    <p>Příspěvky mohou být v českém nebo anglickém jazyce. Jiné jazyky nejsou dovoleny.</p>
+
+    <h5>Rozsah příspěvků</h5>
+
+    <p>Minimální rozsah jsou 4 strany, maximální rozsah je 15 stran.</p>
+
+    <h5>Struktura, formát</h5>
+
+    <p>Je nutné dodržet styl LNCS pro sborníky. Definice jsou k dispozici prot LaTeX2e a Microsoft Word. Podrobné informace je možné najít na stránce <a href="http://www.springer.com/computer/lncs?SGWID=0-164-0-0-0" title="Springer Verlag">Springer Verlag</a>.</p>
+    <p>Dodržujte prosím veškerá typografická pravidla. Používejte pouze černé písmo na bílém pozadí a obrázky pouze vektorového formátu.</p>
+
+    <h5>Odevzdání příspěvku</h5>
+
+    <p>Příspěvek musí být odevzdán ve formátu PDF prostřednictvím těchto webových stránek. Pokud ještě nemáte vytvořen účet, vytvořte si ho <a href="{{ link('/sign/register') }}">zde</a>. Poté
+       v uživatelském menu zvolte "Nový příspěvek", vypište požadované položky, vyberte Váš příspěvek ve formátu PDF a potvrďte odeslání.</p>
+
+{% endblock %}
