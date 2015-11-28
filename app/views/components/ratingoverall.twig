@@ -1,0 +1,32 @@
+
+{% if count == 0 %}
+    Zatím nikdo nehodnotil
+{% else %}
+
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th colspan="5" class="centered">Průměrné hodnocení příspěvku "{{ name }}"</th>
+            </tr>
+            <tr>
+                <th colspan="5" class="centered">Počet hodnocení: {{ count }}</th>
+            </tr>
+            <tr class="ratingrow">
+                <th>Originalita</th>
+                <th>Téma</th>
+                <th>Struktura</th>
+                <th>Jazyk</th>
+                <th>Doporučení</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="ratingrow">
+                <td>{{ originality/count | round(2, 'floor') }}</td>
+                <td>{{ topic/count | round(2, 'floor') }}</td>
+                <td>{{ structure/count | round(2, 'floor') }}</td>
+                <td>{{ language/count | round(2, 'floor') }}</td>
+                <td>{{ recommendation/count | round(2, 'floor') }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}

@@ -1,0 +1,151 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Správa uživatelů</h2>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns centered">
+            <div class="button-group centered" style="width: 100%; display: flex; justify-content: center;">
+                <button type="button" class="button primary filter-btn filter-author" onclick="filterUsers('author');">Autoři</button>
+                <button type="button" class="button primary filter-btn filter-reviewer" onclick="filterUsers('reviewer');">Recenzenti</button>
+                <button type="button" class="button primary filter-btn filter-admin" onclick="filterUsers('admin');">Administrátoři</button>
+                <button type="button" class="button success filter-btn filter-none" onclick="filterUsers(null);">Všichni</button>
+            </div>
+        </div>
+    </div>
+
+    <table style="width: 100%;" id="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Uživ. jméno</th>
+                <th>Jméno</th>
+                <th>Příjmení</th>
+                <th>E-mail</th>
+                <th>Hodnost</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr class="role-{{user['role']}}">
+                <td>{{ user['id'] }}</td>
+                <td>{{ user['username'] }}</td>
+                <td>{{ user['first_name'] }}</td>
+                <td>{{ user['last_name'] }}</td>
+                <td>{{ user['email'] }}</td>
+                <td>{{ userRoles[user['role']] }}</td>
+                <td>
+                    <a href="javascript:void(0);" title="Změna hodnosti" onclick="openPromoteDialog({{user['id']}},'{{user['username']}}','{{user['role']}}')">Hodnost</a>
+                    <a href="javascript:void(0);" title="Smazání" onclick="openDeleteDialog({{user['id']}},'{{user['username']}}')">Smazat</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="promote-dialog" title="Změna hodnosti" style="display: none;">
+
+        <form class="ajax" id="promote-form" action="{{ link('/dashboard/userpromote') }}" method="POST">
+            <div class="row" style="margin-top: 1em;">
+                <div class="large-12 columns">
+                    Změna hodnosti uživatele "<span id="promote-username-target"></span>":
+
+                    <input type="hidden" name="userid" />
+                    <select id="promote-user-role" name="role">
+                        {% for roleid, rolename in userRoles %}
+                            <option value="{{roleid}}">{{rolename}}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+            </div>
+
+            <input type="submit" class="button primary float-right" value="Potvrdit" />
+        </form>
+    </div>
+
+    <div id="delete-dialog" title="Smazání uživatele" style="display: none;">
+
+        <form class="ajax" id="delete-form" action="{{ link('/dashboard/userdelete') }}" method="POST">
+            <div class="row" style="margin-top: 1em;">
+                <div class="large-12 columns">
+                    Doopravdy chcete smazat uživatele "<span id="delete-username-target"></span>"?
+
+                    <input type="hidden" name="userid" />
+                </div>
+            </div>
+
+            <input type="submit" class="button alert float-right" value="Smazat" />
+        </form>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            $('#promote-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+            $('#delete-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+
+            $ajaxer.registerFormSubmitCallback('promote-form', function(resp) {
+                if (resp.status === 'ok')
+                    location.reload();
+            });
+
+            $ajaxer.registerFormSubmitCallback('delete-form', function(resp) {
+                if (resp.status === 'ok')
+                    location.reload();
+            });
+
+            if (location.hash && location.hash.length > 2)
+            {
+                var hrank = location.hash;
+                if (hrank[0] === '#')
+                    hrank = hrank.substr(1);
+                if (['author', 'reviewer', 'admin'].indexOf(hrank) >= 0)
+                    filterUsers(hrank);
+            }
+        });
+
+        function openPromoteDialog(id, name, role)
+        {
+            $('#promote-user-role').val(role);
+            $('#promote-username-target').html(name);
+            $('#promote-dialog').find('input[name="userid"]').val(id);
+            $('#promote-dialog').dialog('open');
+        }
+
+        function openDeleteDialog(id, name)
+        {
+            $('#delete-username-target').html(name);
+            $('#delete-dialog').find('input[name="userid"]').val(id);
+            $('#delete-dialog').dialog('open');
+        }
+
+        function filterUsers(rank)
+        {
+            $('.filter-btn').removeClass('success').addClass('primary');
+
+            if (rank)
+            {
+                $('.filter-btn.filter-'+rank).removeClass('primary').addClass('success');
+                location.hash = rank;
+            }
+            else
+            {
+                $('.filter-btn.filter-none').removeClass('primary').addClass('success');
+                location.hash = '';
+            }
+
+            $.each($('#users-table tbody tr'), function(i,e) {
+                if (!rank || $(e).hasClass('role-'+rank))
+                    $(e).show();
+                else
+                    $(e).hide();
+            });
+        }
+    </script>
+
+{% endblock %}

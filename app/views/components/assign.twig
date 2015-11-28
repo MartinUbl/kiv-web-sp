@@ -1,0 +1,87 @@
+
+<table style="width: 100%;" id="assign-table">
+    <tbody>
+    {% for row in assign %}
+        <tr>
+            {% if row == 'none' %}
+                <td>
+                    <select style="margin: 0;" class="userselect">
+                        {% for user in reviewers %}
+                            {% if user['id'] not in assigned %}
+                            <option value="{{ user['id'] }}">{{ user['first_name'] }} {{ user['last_name'] }} ({{ user['username'] }})</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+                <td colspan="2">
+                    <a href="javascript:void(0);" title="Přiřadit" onclick="assignToUser(this)">OK</a>
+                </td>
+            {% else %}
+                <td>
+                    {{ row['first_name'] }} {{ row['last_name'] }} ({{ row['username'] }})
+                </td>
+                <td>
+                    {% if row['id'] in ratings|keys %}
+                    <table style="margin: 0;">
+                        <thead>
+                            <tr class="ratingrow">
+                                <th title="Originalita">O.</th>
+                                <th title="Téma">T.</th>
+                                <th title="Struktura">S.</th>
+                                <th title="Jazyk">J.</th>
+                                <th title="Doporučení">D.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="ratingrow">
+                                <td>{{ ratings[row['id']]['originality'] }}</td>
+                                <td>{{ ratings[row['id']]['topic'] }}</td>
+                                <td>{{ ratings[row['id']]['structure'] }}</td>
+                                <td>{{ ratings[row['id']]['language'] }}</td>
+                                <td>{{ ratings[row['id']]['recommendation'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% else %}
+                        Ještě nehodnotil
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="javascript:void(0);" title="Zrušit přiřazení" onclick="cancelAssignToUser({{row['users_id']}})">X</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function assignToUser(element)
+    {
+        var usid = $(element).parent().parent().find('.userselect').val();
+        if (typeof usid !== 'undefined' && usid)
+        {
+            $ajaxer.get('{{ link('/dashboard/assign') }}/?contribid={{id}}&userid='+usid, {}, function(resp) {
+                if (resp.status === 'ok')
+                {
+                    // HARAKIRI!!!
+                    $('#assign-table').parent().html(resp.data.content);
+                }
+            });
+        }
+    }
+
+    function cancelAssignToUser(usid)
+    {
+        if (typeof usid !== 'undefined' && usid)
+        {
+            $ajaxer.get('{{ link('/dashboard/assigncancel') }}/?contribid={{id}}&userid='+usid, {}, function(resp) {
+                if (resp.status === 'ok')
+                {
+                    // HARAKIRI!!!
+                    $('#assign-table').parent().html(resp.data.content);
+                }
+            });
+        }
+    }
+</script>

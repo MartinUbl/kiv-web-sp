@@ -1,0 +1,50 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Registrovat se</h2>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-offset-3 large-6 medium-offset-2 medium-8 small-offset-0 small-12 columns">
+            <form class="ajax create-error-elements" action="{{ base_url }}/sign/register" method="POST" id="register-form">
+                <label>
+                    Uživatelské jméno <span class="required"></span>
+                    <input type="text" name="username" placeholder="Uživatelské jméno" />
+                </label>
+                <label>
+                    E-mail <span class="required"></span>
+                    <input type="text" name="email" placeholder="E-mail" />
+                </label>
+                <label>
+                    Heslo <span class="required"></span>
+                    <input type="password" name="password" placeholder="Heslo" />
+                </label>
+                <label>
+                    Heslo znovu <span class="required"></span>
+                    <input type="password" name="password_again" placeholder="Heslo znovu" />
+                </label>
+
+                <label>
+                    Křestní jméno
+                    <input type="text" name="first_name" placeholder="Křestní jméno" />
+                </label>
+                <label>
+                    Příjmení
+                    <input type="text" name="last_name" placeholder="Příjmení" />
+                </label>
+
+                <div class="row">
+                    <div class="large-12 columns">
+                        <span class="required"></span> - povinná položka
+                    </div>
+                </div>
+
+                <input type="submit" class="button primary expanded" value="Registrovat se" />
+
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

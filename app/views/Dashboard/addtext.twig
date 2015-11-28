@@ -1,0 +1,99 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Vkládání příspěvku</h2>
+{% endblock %}
+
+{% block content %}
+
+    <form class="ajax create-error-elements" enctype="multipart/form-data" id="addtext-form" action="{{ link('/dashboard/addtext') }}" method="POST">
+
+        <div class="row">
+            <div class="large-12 columns">
+
+                <label>
+                    Název příspěvku <span class="required"></span>
+                    <input type="text" name="name" maxlength="64" />
+                </label>
+
+                <label>
+                    Autoři (celá jména oddělená čárkami, mohou obsahovat zkratky) <span class="required"></span>
+                    <input type="text" name="authors" maxlength="250" />
+                </label>
+
+                <label>
+                    Abstrakt <span class="required"></span>
+                    <textarea name="abstract" rows="5"></textarea>
+                </label>
+
+                <label>
+                    Soubor <span class="required"></span>
+                    <span class="dropzone">
+                        <span class="nonselected">Soubor vyberete přetažením do této oblasti, nebo kliknutím</span>
+                        <span class="errorneous" style="display: none; color: red;">Vybraný soubor není platný dokument typu PDF</span>
+                        <span class="selected" style="display: none;">Vybraný soubor: <span></span></span>
+                        <input type="file" id="upload-file" name="uploadfile" />
+                    </span>
+                </label>
+
+                <div class="pad_24"></div>
+
+                <div class="row">
+                    <div class="large-12 columns">
+                        <span class="required"></span> - povinná položka
+                    </div>
+                </div>
+
+                <input type="hidden" name="submit_flag" />
+
+                <input type="submit" class="button success float-right" name="save_and_send" value="Uložit a odeslat ke schválení" />
+                <input type="submit" class="button primary float-right" name="save_only" value="Pouze uložit" />
+
+            </div>
+        </div>
+
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#upload-file').change(function() {
+
+                $('input[type=submit]').click(function() {
+                    $('input[name="submit_flag"]').val($(this).attr('name'));
+                });
+
+                var fname = $('#upload-file')[0].files[0]['name'];
+                var spl = fname.split('.');
+                if (spl[spl.length-1].toLowerCase() !== 'pdf')
+                {
+                    var drparent = $('#upload-file').parent();
+
+                    drparent.removeClass('selected');
+                    drparent.find('.selected').hide();
+                    drparent.find('.errorneous').show();
+                    drparent.find('.nonselected').hide();
+                    return;
+                }
+
+                var drparent = $('#upload-file').parent();
+                
+                drparent.addClass('selected');
+                drparent.find('.errorneous').hide();
+                drparent.find('.nonselected').hide();
+                drparent.find('.selected').show();
+
+                drparent.find('.selected span').html(fname);
+            });
+
+            $ajaxer.registerFormSubmitCallback('addtext-form', function(resp) {
+                if (resp.status === 'ok')
+                {
+                    $ajaxer.disableFormAjax('addtext-form');
+                    $('#addtext-form').submit();
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Příspěvky k recenzi</h2>
+{% endblock %}
+
+{% block content %}
+
+    {% if contribCount > 0 %}
+    <table style="width:100%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Název</th>
+                <th>Akce</th>
+                <th>Hodnoceno</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contrib in contribs %}
+            <tr>
+                <td>{{ contrib['id'] }}</td>
+                <td>{{ contrib['name'] }}</td>
+                <td>
+                    <a href="{{ link('/dashboard/contrib') }}/?contribid={{ contrib['id'] }}" title="Zobrazit příspěvek">Zobrazit</a>
+                </td>
+                <td>
+                    {% if contrib['id'] in reviewed %}
+                        ANO
+                    {% else %}
+                        NE
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        Zatím Vám nebyl přiřazen k recenzi žádný příspěvek.
+    {% endif %}
+
+{% endblock %}

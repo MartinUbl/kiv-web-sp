@@ -1,0 +1,31 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Přihlásit se</h2>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-offset-3 large-6 medium-offset-2 medium-8 small-offset-0 small-12 columns">
+            <form class="ajax create-error-elements" action="{{ base_url }}/sign/in" method="POST" id="login-form">
+                <label>
+                    Uživatelské jméno
+                    <input type="text" name="username" placeholder="Uživatelské jméno" />
+                </label>
+                <label>
+                    Heslo
+                    <input type="password" name="password" placeholder="Heslo" />
+                </label>
+                <input type="submit" class="button primary expanded" value="Přihlásit se" />
+            </form>
+
+            <div class="row">
+                <div class="large-12 columns centered">
+                    Nemáte účet? <a href="{{ link('/sign/register') }}">Zaregistrujte se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

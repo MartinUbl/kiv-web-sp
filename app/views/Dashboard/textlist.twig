@@ -1,0 +1,154 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Seznam příspěvků</h2>
+{% endblock %}
+
+{% block content %}
+
+    {% if contribCount > 0 %}
+    <table style="width:100%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Název</th>
+                <th>Autor</th>
+                <th>Stav</th>
+                <th>Hodnocení</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contrib in contribs %}
+            <tr>
+                <td>{{ contrib['id'] }}</td>
+                <td>{{ contrib['name'] }}</td>
+                <td>{{ contrib['first_name'] }} {{ contrib['last_name'] }} ({{ contrib['username'] }})</td>
+                <td>{{ statusTranslations[contrib['status']] }}</td>
+                <td>
+                    {% if contrib['status'] == 'new' %}
+                        <span title="Hodnocení bude k dispozici po odeslání ke schválení">není k dispozici</span>
+                    {% else %}
+                        <a href="javascript:void(0)" title="Zobrazit hodnocení" onclick="openRatingDialog({{ contrib['id'] }}, '{{ contrib['name'] }}')">Zobrazit</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if contrib['status'] == 'new' %}
+                        <a href="javascript:void(0)" title="Smazat příspěvek" onclick="openDeleteDialog({{ contrib['id'] }}, '{{ contrib['name'] }}')">Smazat</a>
+                    {% endif %}
+                    {% if contrib['status'] == 'submitted' %}
+                        <a href="javascript:void(0)" title="Schválit / zamítnout" onclick="openApprovalDialog({{ contrib['id'] }}, '{{ contrib['name'] }}')">Schvalování</a>
+                        <a href="javascript:void(0)" title="Přiřadit k recenzování" onclick="openAssignDialog({{ contrib['id'] }}, '{{ contrib['name'] }}')">Přiřadit</a>
+                    {% endif %}
+                    <a href="{{ link('/dashboard/contrib') }}/?contribid={{ contrib['id'] }}" title="Zobrazit příspěvek">Zobrazit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        Zatím nebyl vytvořen žádný příspěvek.
+    {% endif %}
+
+    <div id="delete-dialog" title="Smazání příspěvku" style="display: none;">
+
+        <form class="ajax" id="delete-form" action="{{ link('/dashboard/mycontribdelete') }}" method="POST">
+            <div class="row" style="margin-top: 1em;">
+                <div class="large-12 columns">
+                    Doopravdy chcete smazat příspěvek "<span id="delete-name-target"></span>"?
+
+                    <input type="hidden" name="contribid" />
+                </div>
+            </div>
+
+            <input type="submit" class="button alert float-right" value="Smazat" />
+        </form>
+    </div>
+
+    <div id="approval-dialog" title="Schvalování příspěvku" style="display: none;">
+
+        <form class="ajax" id="approval-form" action="{{ link('/dashboard/approval') }}" method="POST">
+            <div class="row" style="margin-top: 1em;">
+                <div class="large-12 columns">
+                    Schválit nebo zamítnout příspěvek "<span id="approval-name-target"></span>"?
+
+                    <input type="hidden" name="contribid" />
+                    <input type="hidden" name="approve" id="approve-input" value="1" />
+                </div>
+            </div>
+
+            <input type="submit" class="button alert float-left" value="Zamítnout" onclick="$('#approve-input').val(0);" />
+            <input type="submit" class="button success float-right" value="Schválit" onclick="$('#approve-input').val(1);" />
+        </form>
+    </div>
+
+    <div id="rating-dialog" title="Hodnocení příspěvku" style="display: none;">
+        <div class="row" style="margin-top: 1.2em;">
+            <div class="large-12 columns">
+                <span id="rating-loading-msg">Načítá se hodnocení příspěvku "<span id="rating-name-target"></span>"...</span>
+                <div id="rating-target"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="assign-dialog" title="Přiřazení příspěvku k hodnocení" style="display: none;">
+        <div class="row" style="margin-top: 1.2em;">
+            <div class="large-12 columns">
+                <span id="assign-loading-msg">Načítá se přiřazení příspěvku "<span id="assign-name-target"></span>"...</span>
+                <div id="assign-target"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#delete-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+            $('#approval-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+            $('#rating-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+            $('#assign-dialog').dialog({ width: '50%', autoOpen: false, modal: true });
+        });
+
+        function openDeleteDialog(id, name)
+        {
+            $('#delete-name-target').html(name);
+            $('#delete-dialog').find('input[name="contribid"]').val(id);
+            $('#delete-dialog').dialog('open');
+        }
+
+        function openApprovalDialog(id, name)
+        {
+            $('#approval-name-target').html(name);
+            $('#approval-dialog').find('input[name="contribid"]').val(id);
+            $('#approval-dialog').dialog('open');
+        }
+
+        function openRatingDialog(id, name)
+        {
+            $('#rating-name-target').html(name);
+            $('#rating-loading-msg').show();
+            $('#rating-target').hide();
+            $('#rating-dialog').dialog('open');
+
+            $ajaxer.get('{{ link('/dashboard/getrating') }}/', { contribid: id } , function(resp) {
+                $('#rating-loading-msg').hide();
+                $('#rating-target').html(resp.data.content);
+                $('#rating-target').show();
+            });
+        }
+
+        function openAssignDialog(id, name)
+        {
+            $('#assign-name-target').html(name);
+            $('#assign-loading-msg').show();
+            $('#assign-target').hide();
+            $('#assign-dialog').dialog('open');
+
+            $ajaxer.get('{{ link('/dashboard/getassign') }}/', { contribid: id } , function(resp) {
+                $('#assign-loading-msg').hide();
+                $('#assign-target').html(resp.data.content);
+                $('#assign-target').show();
+            });
+        }
+    </script>
+
+{% endblock %}

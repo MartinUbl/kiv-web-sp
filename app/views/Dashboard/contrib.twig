@@ -1,0 +1,99 @@
+{% extends "_layout.twig" %}
+
+{% block subtitle %}
+    <h2>Detail příspěvku</h2>
+{% endblock %}
+
+{% block content %}
+
+    <a title="Zpět na seznam příspěvků" href="{% if user['role'] == 'author' %}{{link('/dashboard/mytexts')}}{% elseif user['role'] == 'admin' %}{{link('/dashboard/textlist')}}{% else %}{{link('/dashboard/reviewlist')}}{% endif %}">Zpět na seznam</a>
+
+    <div class="callout" style="margin-top: 1em;">
+        <h5>{{ contribution['name'] }}</h5>
+        <h6>Autoři: {{ contribution['authors'] }}</h6>
+        <p title="Abstrakt příspěvku">{{ contribution['abstract'] }}</p>
+        <p><a target="_blank" href="{{ link('/dashboard/download') }}/?contribid={{ contribution['id'] }}" title="Stáhnout příspěvek {{ contribution['name'] }}">Stáhnout</a></p>
+    </div>
+
+    {% if rating_allowed %}
+        <h5>Hodnocení</h5>
+
+        <form class="ajax create-error-elements" id="review-form" action="{{ link('/dashboard/review') }}" method="POST">
+
+            <div class="row">
+                <div class="large-12 columns">
+
+                    <input type="hidden" name="contribid" value="{{ contribution['id'] }}" />
+
+                    <label>
+                        Originalita <span class="required"></span>
+                        <select name="originality">
+                            <option value>- Vyberte -</option>
+                            {% for val, item in ratingScales['originality'] %}
+                                <option value="{{ val }}"{% if rating['originality'] == val %} selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Téma <span class="required"></span>
+                        <select name="topic">
+                            <option value>- Vyberte -</option>
+                            {% for val, item in ratingScales['topic'] %}
+                                <option value="{{ val }}"{% if rating['topic'] == val %} selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Struktura <span class="required"></span>
+                        <select name="structure">
+                            <option value>- Vyberte -</option>
+                            {% for val, item in ratingScales['structure'] %}
+                                <option value="{{ val }}"{% if rating['structure'] == val %} selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Jazyk a jazykové prostředky <span class="required"></span>
+                        <select name="language">
+                            <option value>- Vyberte -</option>
+                            {% for val, item in ratingScales['language'] %}
+                                <option value="{{ val }}"{% if rating['language'] == val %} selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Doporučení <span class="required"></span>
+                        <select name="recommendation">
+                            <option value>- Vyberte -</option>
+                            {% for val, item in ratingScales['recommendation'] %}
+                                <option value="{{ val }}"{% if rating['recommendation'] == val %} selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Poznámky
+                        <textarea name="note" rows="3">{{ rating['notes'] }}</textarea>
+                    </label>
+
+                    <div class="pad_24"></div>
+
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <span class="required"></span> - povinná položka
+                        </div>
+                    </div>
+
+                    <input type="submit" class="button success float-right" name="submit" value="Uložit hodnocení" />
+
+                </div>
+            </div>
+
+        </form>
+
+    {% endif %}
+{% endblock %}
