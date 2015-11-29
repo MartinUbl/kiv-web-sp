@@ -63,6 +63,15 @@ class BaseController
     }
 
     /**
+     * Actions before proceeding with render
+     */
+    public function beforeRender()
+    {
+        // widthdraw flash messages before rendering
+        $this->args->flashmessage = $this->withdrawFlashMessage();
+    }
+
+    /**
      * Retrieves template arguments
      * @return stdClass
      */
@@ -128,6 +137,9 @@ class BaseController
      */
     public function sendRedirect($uri)
     {
+        // disable rendering when redirecting away
+        $this->setRenderEnabled(false);
+
         header('Location: '.$this->buildLink($uri));
     }
 
@@ -139,6 +151,34 @@ class BaseController
     public function buildLink($uri)
     {
         return $this->args->base_url.(($uri[0] == '/') ? $uri : '/'.$uri);
+    }
+
+    /**
+     * Creates flash message to be displayed at next page load
+     * @param string $title
+     * @param string $type
+     */
+    public function flashMessage($title, $type)
+    {
+        SessionHolder::setVariable('flashmessage', 'msg', $title.';;;'.$type);
+    }
+
+    /**
+     * Withdraws flash message from session storage, if any
+     * @return array
+     */
+    public function withdrawFlashMessage()
+    {
+        $val = SessionHolder::getVariable('flashmessage', 'msg');
+        if (!$val)
+            return null;
+        $expl = explode(';;;', $val);
+        if (count($expl) !== 2)
+            return null;
+
+        SessionHolder::setVariable('flashmessage', 'msg', null);
+
+        return $expl;
     }
 
     /**************************

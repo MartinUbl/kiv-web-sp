@@ -164,5 +164,7 @@ if ($startupResult && $controllerObject->isRenderingEnabled())
 
     $controllerObject->hookTemplateExtensions($twig);
 
+    $controllerObject->beforeRender();
+
     echo $twig->render(ucfirst($controller).'/'.$view.'.twig', (array)$controllerObject->getTemplateArgs());
 }

@@ -16,8 +16,8 @@ class DashboardController extends BaseSecuredController
             (is_array($role) && array_search($this->loggedUser['role'], $role) === FALSE ))
         {
             // redirect to proper dashboard, and die silently
+            $this->flashMessage("Nemáte dostatečná oprávnění pro zobrazení této stránky", "error");
             $this->sendRedirect('/dashboard/'.$this->loggedUser['role']);
-            $this->setRenderEnabled(false);
             die();
         }
     }
@@ -179,14 +179,14 @@ class DashboardController extends BaseSecuredController
         // limit upload file size to 2MB
         if ($ff["size"] > 2*1024*1024)
         {
-            // TODO: flash message
+            $this->flashMessage("Vámi nahrávaný soubor je příliš velký. Redukujte jeho velikost pod 2MB.", "error");
             return;
         }
 
         // allow only PDF files
         if (strtolower(pathinfo(basename($ff["name"]),PATHINFO_EXTENSION)) !== 'pdf')
         {
-            // TODO: flash message
+            $this->flashMessage("Vámi nahrávaný soubor není ve formátu PDF", "error");
             return;
         }
 
@@ -202,6 +202,8 @@ class DashboardController extends BaseSecuredController
             // submit flag is set to indicate action - to submit or not to submit, that's the question
             $this->contributions()->addUserContribution($this->loggedUser['id'], htmlspecialchars($_POST['name']), htmlspecialchars($_POST['authors']), htmlspecialchars($_POST['abstract']), $nname,
                     (isset($_POST['submit_flag']) && $_POST['submit_flag'] === 'save_and_send') ? true : false);
+
+            $this->flashMessage("Váš příspěvek byl úspěšně vložen", "success");
 
             // after successfull insert, redirect to mytexts
             $this->sendRedirect('/dashboard/mytexts');
@@ -222,7 +224,7 @@ class DashboardController extends BaseSecuredController
         // if it's author, verify, if he deletes his contribution
         if ($this->loggedUser['role'] === UserRoles::AUTHOR && $contrib['users_id'] !== $this->loggedUser['id'])
         {
-            // TODO: flash message
+            $this->flashMessage("Nelze mazat cizí příspěvek!", "error");
             $this->sendResponseJSON(array(), AjaxResponseCodes::NOT_FOUND, $returnLink);
             return;
         }
@@ -233,6 +235,7 @@ class DashboardController extends BaseSecuredController
         // delete contribution from database
         $this->contributions()->deleteContribution($contrib['id']);
 
+        $this->flashMessage("Příspěvek byl úspěšně smazán", "success");
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, $returnLink);
     }
 
@@ -248,7 +251,7 @@ class DashboardController extends BaseSecuredController
         // it has to be current user's contribution
         if ($contrib['users_id'] !== $this->loggedUser['id'])
         {
-            // TODO: flash message
+            $this->flashMessage("Nelze odeslat příspěvek, který není ve Vašem vlastnictví!", "error");
             $this->sendResponseJSON(array(), AjaxResponseCodes::NOT_FOUND, '/dashboard/mytexts');
             return;
         }
@@ -256,6 +259,7 @@ class DashboardController extends BaseSecuredController
         // update status to submitted
         $this->contributions()->setContributionStatus($contrib['id'], ContributionStatus::SUBMITTED);
 
+        $this->flashMessage("Příspěvek byl odeslán ke schválení", "success");
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, '/dashboard/mytexts');
     }
 
@@ -271,7 +275,7 @@ class DashboardController extends BaseSecuredController
         // we do not send rating for not-submitted work
         if ($contrib['status'] === ContributionStatus::NEW_CONTRIB)
         {
-            // TODO: flash message
+            $this->flashMessage("Příspěvek v tomto stavu nemá hodnocení!", "error");
             $this->sendResponseJSON(array(), AjaxResponseCodes::NOT_FOUND, '/dashboard/mytexts');
             return;
         }
@@ -279,7 +283,7 @@ class DashboardController extends BaseSecuredController
         // author can only retrieve his contribution rating
         if ($this->loggedUser['role'] === UserRoles::AUTHOR && $contrib['users_id'] !== $this->loggedUser['id'])
         {
-            // TODO: flash message
+            $this->flashMessage("Nelze zobrazit hodnocení cizího článku!", "error");
             $this->sendResponseJSON(array(), AjaxResponseCodes::NOT_FOUND, '/dashboard/mytexts');
             return;
         }
@@ -319,7 +323,7 @@ class DashboardController extends BaseSecuredController
 
         if (!$found)
         {
-            // TODO: flash message
+            $this->flashMessage("Tento příspěvek Vám bohužel nebyl přiřazen k hodnocení", "error");
             $this->sendRedirect('/dashboard/reviewlist');
             return false;
         }
@@ -339,7 +343,7 @@ class DashboardController extends BaseSecuredController
         // when user is author, the contribution needs to be his
         if ($this->loggedUser['role'] === UserRoles::AUTHOR && $contrib['users_id'] !== $this->loggedUser['id'])
         {
-            // TODO: flash message
+            $this->flashMessage("Nelze prohlížet příspěvky jiných autorů", "error");
             $this->sendRedirect('/dashboard/mytexts');
             return;
         }
@@ -386,7 +390,7 @@ class DashboardController extends BaseSecuredController
         // when user is author, the contribution needs to be his
         if ($this->loggedUser['role'] === UserRoles::AUTHOR && $contrib['users_id'] !== $this->loggedUser['id'])
         {
-            // TODO: flash message
+            $this->flashMessage("Nelze prohlížet příspěvky ostatních autorů", "error");
             $this->sendResponseJSON(array(), AjaxResponseCodes::NOT_FOUND, '/dashboard/mytexts');
             return;
         }
@@ -472,7 +476,7 @@ class DashboardController extends BaseSecuredController
         // if no contrib found, raise error
         if (!$contrib)
         {
-            // TODO: flash message
+            $this->flashMessage("Příspěvek nebyl nalezen", "error");
             if (!$this->args->is_ajax)
                 $this->sendRedirect($returnLink);
             else
@@ -485,7 +489,7 @@ class DashboardController extends BaseSecuredController
         {
             if ($contrib['status'] !== $statusCheck)
             {
-                // TODO: flash message
+                $this->flashMessage("V tomto stavu nelze s příspěvkem takto manipulovat", "error");
                 if (!$this->args->is_ajax)
                     $this->sendRedirect($returnLink);
                 else
@@ -508,6 +512,7 @@ class DashboardController extends BaseSecuredController
 
         $this->contributions()->setContributionStatus($contrib['id'], ((int)$_POST['approve'] === 1) ? ContributionStatus::ACCEPTED : ContributionStatus::REJECTED);
 
+        $this->flashMessage("Příspěvek byl ". (((int)$_POST['approve'] === 1) ? "schválen" : "zamítnut"), "success");
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, '/dashboard/textlist');
     }
 
@@ -660,6 +665,7 @@ class DashboardController extends BaseSecuredController
                 (int)$_POST['originality'], (int)$_POST['topic'], (int)$_POST['structure'],
                 (int)$_POST['language'], (int)$_POST['recommendation'], htmlspecialchars($_POST['note']));
 
+        $this->flashMessage("Vaše hodnocení bylo zaznamenáno", "success");
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, '/dashboard/reviewlist');
     }
 }

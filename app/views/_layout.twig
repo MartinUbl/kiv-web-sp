@@ -26,6 +26,12 @@
 <body>
     <div class="container">
 
+        {% if flashmessage is defined %}
+            {% if flashmessage != null %}
+                <div class="flashmessage {{ flashmessage[1] }}">{{ flashmessage[0] }}</div>
+            {% endif %}
+        {% endif %}
+
         <div id="header">
             <a href="{{ link('/') }}" class="nodecor" title="Zpět na titulní stranu"><h1>WEBKONF</h1></a>
             {% block subtitle %}

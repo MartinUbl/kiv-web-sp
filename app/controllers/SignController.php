@@ -14,7 +14,7 @@ class SignController extends BaseController
         // if user is logged in, kick him
         if ($this->loggedUser)
         {
-            // TODO: flash message
+            $this->flashMessage("Už jste přihlášen/a!", "error");
             $this->sendRedirect('/dashboard/'.$this->loggedUser['role']);
             return false;
         }
@@ -73,6 +73,8 @@ class SignController extends BaseController
 
         // login!
         SessionHolder::setLoggedUserId($user['id']);
+
+        $this->flashMessage("Přihlášení proběhlo úspěšně!", "success");
 
         // redirect to appropriate dashboard
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, '/dashboard/'.$user['role']);
@@ -143,6 +145,8 @@ class SignController extends BaseController
 
         // also login!
         SessionHolder::setLoggedUserId($id);
+
+        $this->flashMessage("Registrace proběhla úspěšně!", "success");
 
         // redirect to author dashboard (everybody starts as author)
         $this->sendResponseJSON(array(), AjaxResponseCodes::OK, '/dashboard/author');

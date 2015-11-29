@@ -280,3 +280,42 @@ input[type=submit]
     height: auto;
     margin: 2em auto 1em auto;
 }
+
+.flashmessage
+{
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 768px;
+    margin: auto;
+
+    z-index: 1000;
+
+    padding: 1.5em;
+    transition: top 0.4s;
+    -webkit-transition: top 0.4s;
+
+    border: 1px solid #1ea450;
+    background-color: #5aeb86;
+}
+
+.flashmessage.hidden
+{
+    top: -100px;
+}
+
+.flashmessage.success
+{
+    border: 1px solid #1ea450;
+    background-color: #5aeb86;
+    color: black;
+}
+
+.flashmessage.error
+{
+    border: 1px solid #a41e30;
+    background-color: #eb5a56;
+    color: black;
+}
