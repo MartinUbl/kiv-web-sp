@@ -15,12 +15,26 @@
 
 <?php
 
+/**
+ * Function for proceeding with installation
+ * @param string $host
+ * @param string $user
+ * @param string $password
+ * @param string $dbsystem
+ * @param string $dbname
+ * @param boolean $testdata
+ * @param string $pagetitle
+ * @return boolean
+ */
 function proceedInstall($host, $user, $password, $dbsystem, $dbname, $testdata, $pagetitle)
 {
+    // prepare DB connection
     $dsn = $dbsystem.':dbname='.$dbname.';host='.$host;
     try
     {
+        // also force UTF-8
         $db = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        // and exception mode for errors
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch (PDOException $ee)
@@ -32,6 +46,7 @@ function proceedInstall($host, $user, $password, $dbsystem, $dbname, $testdata, 
     // prepare config
     $cfgfile = file_get_contents(__DIR__.'/install/config.inc.template.php');
 
+    // prepare substitution array
     $subarray = array(
         'DBSYSTEM' => $dbsystem,
         'DBHOST' => $host,
@@ -41,11 +56,14 @@ function proceedInstall($host, $user, $password, $dbsystem, $dbname, $testdata, 
         'PAGETITLE' => $pagetitle
     );
 
+    // replace every key-value with regular value
     foreach ($subarray as $key => $value)
         $cfgfile = str_replace('${'.$key.'}', $value, $cfgfile);
 
+    // writeout config
     file_put_contents(__DIR__.'/app/config/config.inc.php', $cfgfile);
 
+    // try to install structure
     try
     {
         $db->exec(file_get_contents(__DIR__.'/install/db.structure.sql'));
@@ -58,10 +76,13 @@ function proceedInstall($host, $user, $password, $dbsystem, $dbname, $testdata, 
 
     echo "Konfigurační soubor byl připraven a databázová struktura vytvořena!";
 
+    // if user requested testing data to be installed
     if ($testdata)
     {
+        // check if testdata SQL file exists
         if (file_exists(__DIR__.'/install/db.testdata.sql'))
         {
+            // install it
             $db->exec(file_get_contents(__DIR__.'/install/db.testdata.sql'));
 
             // copy test PDFs
@@ -77,13 +98,16 @@ function proceedInstall($host, $user, $password, $dbsystem, $dbname, $testdata, 
         }
     }
 
+    // success
     return true;
 }
 
+// at first, verify if we installed system before (determined by presence of config file)
 if (file_exists(__DIR__.'/app/config/config.inc.php'))
 {
     echo "Systém již byl nainstalován! Pro opětovnou instalaci vymažte konfigurační soubor config.inc.php z podadresáře app/config/";
 }
+// check critical files presence
 else if (!file_exists(__DIR__.'/install/config.inc.template.php') ||
     !file_exists(__DIR__.'/install/db.structure.sql'))
 {
@@ -91,8 +115,10 @@ else if (!file_exists(__DIR__.'/install/config.inc.template.php') ||
     echo "config.inc.template.php<br />";
     echo "db.structure.sql<br />";
 }
+// if the form was submitted already
 else if (isset($_POST['dbhost']) && isset($_POST['dbuser']) && isset($_POST['dbpass']) && isset($_POST['dbsystem']) && isset($_POST['dbname']) && isset($_POST['pagetitle']))
 {
+    // lower error reporting due to possible inconsistencies in PHP version - this will suppress possible deprecation warnings and several notices
     error_reporting(E_ERROR);
 
     if (!proceedInstall($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass'], $_POST['dbsystem'], $_POST['dbname'], isset($_POST['testdata']), $_POST['pagetitle']))
@@ -104,6 +130,7 @@ else if (isset($_POST['dbhost']) && isset($_POST['dbuser']) && isset($_POST['dbp
         echo '<a class="button" href="." title="Přejít na stránky">Jít na WEBKONF portál</a>';
     }
 }
+// offer installation
 else
 {
 ?>
