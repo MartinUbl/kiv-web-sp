@@ -1,0 +1,37 @@
+SET foreign_key_checks = 0;
+
+INSERT INTO `contribution_rating` VALUES ('1', '2', '3', '4', '4', '3', '3', 'Na mě moc zmatené a nesrozumitelné, ale někomu se to líbit může.', '2015-11-29 16:52:09');
+INSERT INTO `contribution_rating` VALUES ('1', '3', '2', '1', '2', '1', '1', 'Hrůza, nedá se to číst a vůbec nevím, o co šlo.', '2015-11-29 16:53:01');
+INSERT INTO `contribution_rating` VALUES ('2', '4', '4', '3', '4', '5', '4', 'Ale jo, dá se to.', '2015-11-29 16:54:16');
+INSERT INTO `contribution_rating` VALUES ('2', '5', '4', '4', '3', '4', '4', 'Hezký příspěvek, ale chce to trochu snahy pro příště.', '2015-11-29 16:56:27');
+INSERT INTO `contribution_rating` VALUES ('4', '3', '5', '5', '5', '5', '5', 'Skvělé, stejně jako Ruby on Rails ani toto nemůže mít jedinou chybu.', '2015-11-29 16:53:25');
+INSERT INTO `contribution_rating` VALUES ('4', '4', '5', '2', '3', '3', '3', 'Sice originální příspěvek, ale velmi nudný a takřka bez přínosu.', '2015-11-29 16:55:21');
+INSERT INTO `contribution_rating` VALUES ('5', '3', '4', '4', '4', '5', '5', 'Dobré, rozhodně bych to použil.', '2015-11-29 16:53:46');
+INSERT INTO `contribution_rating_assignment` VALUES ('1', '2');
+INSERT INTO `contribution_rating_assignment` VALUES ('4', '2');
+INSERT INTO `contribution_rating_assignment` VALUES ('1', '3');
+INSERT INTO `contribution_rating_assignment` VALUES ('4', '3');
+INSERT INTO `contribution_rating_assignment` VALUES ('5', '3');
+INSERT INTO `contribution_rating_assignment` VALUES ('1', '4');
+INSERT INTO `contribution_rating_assignment` VALUES ('2', '4');
+INSERT INTO `contribution_rating_assignment` VALUES ('4', '4');
+INSERT INTO `contribution_rating_assignment` VALUES ('5', '4');
+INSERT INTO `contribution_rating_assignment` VALUES ('2', '5');
+INSERT INTO `contribution_rating_assignment` VALUES ('5', '5');
+INSERT INTO `contributions` VALUES ('1', '6', 'MVC a jeho výhody', 'Ing. Autor Autorovič, Mgr. Antonín Topič', 'V tomto příspěvku vám představíme MVC.', 'testdata1.pdf', 'accepted', '2015-11-29 16:45:09', null);
+INSERT INTO `contributions` VALUES ('2', '7', 'Nette2 Framework', 'David Grudl, Nette Foundation', 'Příspěvek o Nette2 frameworku a všem kolem.', 'testdata2.pdf', 'submitted', '2015-11-29 16:46:45', '2015-11-29 16:46:45');
+INSERT INTO `contributions` VALUES ('3', '7', 'Latte šablony', 'David Grudl, Nette Foundation', 'Latte šablonovací systém, integrace do Nette2 Frameworku a vlastních systémů.', 'testdata3.pdf', 'new', '2015-11-29 16:47:23', null);
+INSERT INTO `contributions` VALUES ('4', '8', 'Ruby on Rails', 'Ing. Ruby Spito, Doc. Ing. Kentán z Montarži PhD.', 'Ruby on Rails a všechny jeho výhody.', 'testdata4.pdf', 'submitted', '2015-11-29 16:48:43', '2015-11-29 16:48:43');
+INSERT INTO `contributions` VALUES ('5', '9', 'Webové aplikace pro začátečníky', 'Kain, Abel', 'Jak vyvíjet webové aplikace?', 'testdata5.pdf', 'submitted', '2015-11-29 16:49:32', '2015-11-29 16:49:32');
+INSERT INTO `contributions` VALUES ('6', '9', 'Webové aplikace pro pokročilé', 'Kain, Abel, Adam, Eve', 'Pokročilejší verze příspěvku pro začátečníky.', 'testdata6.pdf', 'new', '2015-11-29 16:50:07', null);
+INSERT INTO `users` VALUES ('1', 'administrator', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Admin', 'Adminovič', 'admin@webkonf.cz', 'admin');
+INSERT INTO `users` VALUES ('2', 'recenzent1', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Dave', 'Lister', 'rec1@webkonf.cz', 'reviewer');
+INSERT INTO `users` VALUES ('3', 'recenzent2', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Arnold', 'Rimmer', 'rec2@webkonf.cz', 'reviewer');
+INSERT INTO `users` VALUES ('4', 'recenzent3', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'The', 'Cat', 'rec3@webkonf.cz', 'reviewer');
+INSERT INTO `users` VALUES ('5', 'recenzent4', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Kryten', '2X4B523P', 'rec4@webkonf.cz', 'reviewer');
+INSERT INTO `users` VALUES ('6', 'autor1', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Eric', 'Cartman', 'aut1@webkonf.cz', 'author');
+INSERT INTO `users` VALUES ('7', 'autor2', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Kyle', 'Broflowski', 'aut2@webkonf.cz', 'author');
+INSERT INTO `users` VALUES ('8', 'autor3', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Stan', 'Marsh', 'aut3@webkonf.cz', 'author');
+INSERT INTO `users` VALUES ('9', 'autor4', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Kenny', 'McCormick', 'aut4@webkonf.cz', 'author');
+
+SET foreign_key_checks = 1;

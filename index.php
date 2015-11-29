@@ -64,6 +64,16 @@ else
 
 // require config and vendor libs
 
+if (!file_exists(__DIR__.'/app/config/config.inc.php'))
+{
+    die('System jeste nebyl nainstalovan. Pro instalaci prejdete na <a href="'.$baseurl.'/install.php" title="Instalace systemu">instalacni skript</a>');
+}
+
+if (!file_exists(__DIR__.'/app/vendor/autoload.php'))
+{
+    die('Nebylo mozne naleznout vendor knihovny. Presunte se do slozky app/ a spustte prikaz "php composer.phar install --no-dev"');
+}
+
 require __DIR__.'/app/config/config.inc.php';
 require __DIR__.'/app/vendor/autoload.php';
 

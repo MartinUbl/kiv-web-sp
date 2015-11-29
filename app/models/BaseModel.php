@@ -19,7 +19,8 @@ abstract class BaseModel
             // estabilish one
 
             $dsn = DB_DBMS.':dbname='.DB_DATABASE.';host='.DB_HOST;
-            self::$dbConnection = new PDO($dsn, DB_USER, DB_PASS, array());
+            self::$dbConnection = new PDO($dsn, DB_USER, DB_PASS, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+            self::$dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
     }
 

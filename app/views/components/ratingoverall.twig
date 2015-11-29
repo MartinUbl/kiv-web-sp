@@ -21,11 +21,11 @@
         </thead>
         <tbody>
             <tr class="ratingrow">
-                <td>{{ originality/count | round(2, 'floor') }}</td>
-                <td>{{ topic/count | round(2, 'floor') }}</td>
-                <td>{{ structure/count | round(2, 'floor') }}</td>
-                <td>{{ language/count | round(2, 'floor') }}</td>
-                <td>{{ recommendation/count | round(2, 'floor') }}</td>
+                <td>{{ (originality/count) | round(2, 'floor') }}</td>
+                <td>{{ (topic/count) | round(2, 'floor') }}</td>
+                <td>{{ (structure/count) | round(2, 'floor') }}</td>
+                <td>{{ (language/count) | round(2, 'floor') }}</td>
+                <td>{{ (recommendation/count) | round(2, 'floor') }}</td>
             </tr>
         </tbody>
     </table>
